@@ -1,0 +1,19 @@
+name: Publish the installer as a release
+on:
+  push:
+    branches: [main]
+    paths: ['EmberfallSetup.exe']
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V="v$(date -u +%Y.%m.%d-%H%M)"
+          gh release create "$V" EmberfallSetup.exe --title "Emberfall Online for Windows ($V)" --latest \
+            --notes "Windows installer for Emberfall Online. The app always loads the latest game, so updates arrive without reinstalling. If Windows shows 'Windows protected your PC', click More info → Run anyway."
